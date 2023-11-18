@@ -467,5 +467,110 @@ for i in data:
 
 #print(f'EUR: {grn / cur[0]}\nUSD: {grn / cur[1]}\nPLN: {grn / cur[2]}')
 '''
+'''
+import requests
+from bs4 import BeautifulSoup as bs
 
 
+#grn = int(input('Enter grn: '))
+r = requests.get("https://meteo.ua/ua/34/kiev#2023-11-17--19-00")
+html = bs(r.text, "html.parser")
+day = html.find_all('div', class_= 'menu-basic__day' )
+cur = []
+day2 = html.find_all('div', class_= 'menu-basic__month')
+cur2 = []
+daytem = html.find_all('div', class_= 'menu-basic__degree')
+cur3 =[]
+for i in day:
+    cur.append(i.text)
+for i in day2:
+    cur2.append(i.text)
+for i in daytem:
+    cur3.append(i.text)
+for i in range(len(cur)):
+    print(cur[i], cur2[i], cur3[i])
+'''
+
+
+#print(f'EUR: {grn / cur[0]}\nUSD: {grn / cur[1]}\nPLN: {grn / cur[2]}')
+
+'''
+
+import sqlite3
+
+
+conection = sqlite3.connect('shop.db')
+cursor = conection.cursor()
+
+cursor.execute("""CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY, 
+               name VARCHAR(100) UNIQUE NOT NULL,
+               password VARCHAR(100) NOT NULL);""")
+
+conection.commit()
+conection.close()
+# conection = sqlite3.connect('shop.db')
+# cursor = conection.cursor()
+# cursor.execute("""INSERT INTO user(name, password) VALUES ('Bob', '12354'), ('Jack', 'wasd');""")
+# conection.commit()
+# conection.close()
+
+conection = sqlite3.connect('shop.db')
+cursor = conection.cursor()
+cursor.execute("""SELECT * FROM user; """)
+data = cursor.fetchall()
+print(data)
+conection.close()
+'''
+'''
+import sqlite3
+
+
+conection = sqlite3.connect('film1.db')
+cursor = conection.cursor()
+
+cursor.execute("""CREATE TABLE IF NOT EXISTS film (id INTEGER PRIMARY KEY, 
+                name VARCHAR(100) UNIQUE NOT NULL,
+                year DATE NOT NULL),
+                janre VARCHAR(100) NOT NULL,
+                reg VARCHAR(100) NOT NULL;""")
+cursor.execute("""CREATE TABLE IF NOT EXISTS regiser (id INTEGER PRIMARY KEY, 
+                name VARCHAR(100) UNIQUE NOT NULL,
+                year DATE NOT NULL);""")
+
+
+conection = sqlite3.connect('film1.db')
+cursor = conection.cursor()
+cursor.execute("""INSERT INTO film(name, year, janre, reg) VALUES ('Iron Man', '2008-01-12', 'Superhero film', 'John Favro'), 
+               ('Iron Man 2', '2010-12-05', 'Superhero film', 'John Favro'),
+               ('Tor love & thunder', '2022-05-07', 'Superhero film', 'Taika Vaity'),
+               ('On western front without changes', '2022-08-12', 'Action', 'Eduart Berger');""")
+cursor.execute("""INSERT INTO regiser(name, year) VALUES ('John Favro', '1966-09-10'), ('Taika Vaity', '1975-08-06'), ('Eduart Berger', '1970-09-01');""")
+
+
+conection = sqlite3.connect('film1.db')
+cursor = conection.cursor()
+cursor.execute("""SELECT * FROM film WHERE janre = Superhero film; """)
+cursor.execute("""SELECT * FROM regiser; """)
+data = cursor.fetchall()
+print(data)
+conection.close()
+'''
+'''
+import cv2
+image_path = 'cat1.jpg'
+image = cv2.imread(image_path)
+cv2.imshow('Cat', image)
+cv2.waitKey()
+'''
+'''
+import cv2
+image_path = 'cat1.jpg'
+cat_face_cascade = cv2.CascadeClassifier('lox.xml')
+image = cv2.imread(image_path)
+cat_face = cat_face_cascade.detectMultiScale(image)
+print(cat_face)
+for (x, y, w, h) in cat_face:
+    cv2.rectangle(image, (x,y), (x+w, y+h), (0, 0, 255),3)
+cv2.imshow('Cat', image)
+cv2.waitKey()
+'''
