@@ -453,26 +453,6 @@ from bs4 import BeautifulSoup as bs
 
 
 #grn = int(input('Enter grn: '))
-r = requests.get("https://auto.ria.com/uk/legkovie/lamborghini/?page=1")
-html = bs(r.text, "html.parser")
-data = html.find_all('div', class_= 'price-ticket')
-cur = []
-data2 = html.find_all('div', class_= 'adress')
-cur2 = []
-for i in data2:
-    print(i.span.text)
-for i in data:
-    print(i.span.text)
-
-
-#print(f'EUR: {grn / cur[0]}\nUSD: {grn / cur[1]}\nPLN: {grn / cur[2]}')
-'''
-'''
-import requests
-from bs4 import BeautifulSoup as bs
-
-
-#grn = int(input('Enter grn: '))
 r = requests.get("https://meteo.ua/ua/34/kiev#2023-11-17--19-00")
 html = bs(r.text, "html.parser")
 day = html.find_all('div', class_= 'menu-basic__day' )
@@ -570,7 +550,67 @@ image = cv2.imread(image_path)
 cat_face = cat_face_cascade.detectMultiScale(image)
 print(cat_face)
 for (x, y, w, h) in cat_face:
-    cv2.rectangle(image, (x,y), (x+w, y+h), (0, 0, 255),3)
+    cv2.rectangle(image, (x,y), (x+w, y+h), (50, 80, 200),6)
+cv2.imshow('Cat', image)
+cv2.waitKey()
+cv2.imshow('Cat', image)
+cv2.waitKey()
 cv2.imshow('Cat', image)
 cv2.waitKey()
 '''
+
+import sqlite3
+import requests
+from bs4 import BeautifulSoup as bs 
+
+class Base:
+    def create():
+        conection = sqlite3.connect('site.db')
+        cursor = conection.cursor()
+        cursor.execute(f"""CREATE TABLE IF NOT EXISTS sites (id INTEGER PRIMARY KEY,
+                       name VARCHAR(100) UNIQUE NOT NULL,
+                       link VARCHAR(100) UNIQUE NOT NULL);""")
+        conection.commit()
+        conection.close()
+    def enter():
+        conection = sqlite3.connect('site.db')
+        cursor = conection.cursor()
+        while True:
+            c = input('Input name: ')
+            b=input(f'Input link: ')
+            cursor.execute(f"""INSERT INTO sites(name, link) VALUES ('{c}', '{b}')""")
+            a=input('something else?: (y/n) ')
+            if a == 'n':
+                break
+        conection.commit()
+        conection.close()
+    def get_out():
+        pass
+class pars:
+    def pars(b):
+        r = requests.get(b)
+        html = bs(r.text, "html.parser")
+        find = input('input what u want to find? ')
+        look = html.find_all('div', class_= find )
+        cur = []
+        find2 = input('input what u want to find? ')
+        look2 = html.find_all('div', class_= find2 )
+        cur2 = []
+        for i in look:
+            cur.append(i.text)
+        for i in look2:
+            cur2.append(i.text)
+        for i in range(len(cur)):
+            print(cur[i], cur2[i])
+        print('Внесено в базу данних')
+        conection = sqlite3.connect('site.db')
+        cursor = conection.cursor()
+        cursor.execute(f"""CREATE TABLE IF NOT EXISTS site2 (id INTEGER PRIMARY KEY,
+                       a VARCHAR(100) UNIQUE NOT NULL,
+                       b VARCHAR(100) UNIQUE NOT NULL);""")
+        cursor.execute(f'''INSERT * INTO site2(a, b) VALUES ('{cur}', '{cur2}')''')
+        conection.commit()
+        conection.close()
+Base.create()
+Base.enter()
+pars.pars()
